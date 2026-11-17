@@ -198,18 +198,33 @@ function VideoCollection({ collection }) {
     const track = trackRef.current
     const firstSet = track?.querySelector('.video-set')
     const firstCard = firstSet?.querySelector('.video-card')
+    const cards = firstSet ? Array.from(firstSet.querySelectorAll('.video-card')) : []
     const step = firstSet && firstCard
       ? (Number.parseFloat(window.getComputedStyle(firstCard).width) || firstCard.offsetWidth) +
         (Number.parseFloat(window.getComputedStyle(firstSet).gap) || 0)
       : 0
 
+    function scrollToAdjacentCard(behavior) {
+      if (!marquee || !firstCard || cards.length < 2) return
+
+      const offsets = cards.map((card) => card.offsetLeft - firstCard.offsetLeft)
+      const currentIndex = offsets.reduce(
+        (closestIndex, offset, index) =>
+          Math.abs(offset - marquee.scrollLeft) < Math.abs(offsets[closestIndex] - marquee.scrollLeft)
+            ? index
+            : closestIndex,
+        0,
+      )
+      const directionStep = direction === 'next' ? 1 : -1
+      const targetIndex = (currentIndex + directionStep + cards.length) % cards.length
+      marquee.scrollTo({ left: offsets[targetIndex], behavior })
+    }
+
     if (
       window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
       window.matchMedia('(max-width: 560px)').matches
     ) {
-      if (marquee && firstSet && firstCard) {
-        marquee.scrollBy({ left: direction === 'next' ? step : -step, behavior: 'auto' })
-      }
+      scrollToAdjacentCard('auto')
       return
     }
 
@@ -217,13 +232,32 @@ function VideoCollection({ collection }) {
     const duration = animation?.effect?.getComputedTiming().duration
     const setWidth = firstSet?.getBoundingClientRect().width
 
-    if (animation && Number.isFinite(duration) && setWidth && firstCard) {
+    if (animation && Number.isFinite(duration) && duration > 0 && setWidth && step > 0 && cards.length > 1) {
       const reverse = window.getComputedStyle(track).animationDirection === 'reverse'
-      const timeDirection = (direction === 'next' ? 1 : -1) * (reverse ? -1 : 1)
-      animation.currentTime = Number(animation.currentTime ?? 0) +
-        timeDirection * duration * step / setWidth
-    } else if (marquee && firstSet && firstCard) {
-      marquee.scrollBy({ left: direction === 'next' ? step : -step, behavior: 'smooth' })
+      const currentTime = Number(animation.currentTime ?? 0)
+      const phase = ((currentTime % duration) + duration) % duration / duration
+      const position = ((reverse ? 1 - phase : phase) * setWidth) % setWidth
+      const currentIndex = cards.reduce(
+        (closestIndex, _card, index) => {
+          const offset = index * step
+          const distance = Math.abs(position - offset)
+          const closestOffset = closestIndex * step
+          const closestDistance = Math.abs(position - closestOffset)
+          return Math.min(distance, setWidth - distance) <
+            Math.min(closestDistance, setWidth - closestDistance)
+            ? index
+            : closestIndex
+        },
+        0,
+      )
+      const directionStep = direction === 'next' ? 1 : -1
+      const targetIndex = (currentIndex + directionStep + cards.length) % cards.length
+      const targetPosition = targetIndex * step
+      const targetPhase = reverse ? 1 - targetPosition / setWidth : targetPosition / setWidth
+      animation.pause()
+      animation.currentTime = targetPhase * duration
+    } else {
+      scrollToAdjacentCard('smooth')
     }
   }
 
