@@ -197,7 +197,10 @@ function VideoCollection({ collection }) {
     const firstSet = track?.querySelector('.video-set')
     const firstCard = firstSet?.querySelector('.video-card')
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      window.matchMedia('(max-width: 560px)').matches
+    ) {
       if (marquee && firstSet && firstCard) {
         const gap = Number.parseFloat(window.getComputedStyle(firstSet).gap) || 0
         const step = firstCard.offsetWidth + gap
@@ -226,7 +229,7 @@ function VideoCollection({ collection }) {
 
   return (
     <article className={`video-group ${collection.kind ?? ''}`}>
-      <div className="video-marquee" ref={marqueeRef} aria-label={`${collection.title} videos`}>
+      <div className="video-marquee" aria-label={`${collection.title} videos`}>
         <button
           className="video-marquee-button video-marquee-previous"
           type="button"
@@ -235,22 +238,24 @@ function VideoCollection({ collection }) {
         >
           ‹
         </button>
-        <div className="video-track" ref={trackRef}>
-          {[0, 1].map((copy) => (
-            <div
-              className="video-set"
-              key={copy}
-              aria-hidden={copy === 1 ? 'true' : undefined}
-              inert={copy === 1}
-            >
-              {collection.videos.map((video) => (
-                <PortfolioVideo
-                  key={`${video.url}-${copy}`}
-                  video={video}
-                />
-              ))}
-            </div>
-          ))}
+        <div className="video-scroll" ref={marqueeRef}>
+          <div className="video-track" ref={trackRef}>
+            {[0, 1].map((copy) => (
+              <div
+                className="video-set"
+                key={copy}
+                aria-hidden={copy === 1 ? 'true' : undefined}
+                inert={copy === 1}
+              >
+                {collection.videos.map((video) => (
+                  <PortfolioVideo
+                    key={`${video.url}-${copy}`}
+                    video={video}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
         <button
           className="video-marquee-button video-marquee-next"

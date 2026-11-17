@@ -1274,9 +1274,15 @@ textarea {
   perspective: 720px;
 }
 
+.video-scroll {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .video-marquee-button {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   top: 50%;
   display: grid;
   width: 42px;
@@ -2224,8 +2230,20 @@ textarea {
   }
 
   .video-marquee {
-    overflow-x: auto;
+    overflow: hidden;
   }
+
+  .video-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+
+  .video-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
 }
 
 @media (max-width: 560px) {
@@ -2773,14 +2791,18 @@ textarea {
   }
 
   .video-marquee {
+    overflow: hidden;
+    perspective: none;
+  }
+
+  .video-scroll {
     overflow-x: auto;
     overflow-y: hidden;
-    perspective: none;
     scrollbar-width: none;
     touch-action: pan-x;
   }
 
-  .video-marquee::-webkit-scrollbar {
+  .video-scroll::-webkit-scrollbar {
     display: none;
   }
 
@@ -2813,6 +2835,7 @@ textarea {
   }
 
   .video-marquee-button {
+    z-index: 3;
     width: 36px;
     height: 36px;
   }
