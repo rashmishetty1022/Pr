@@ -2796,9 +2796,11 @@ textarea {
   }
 
   .video-scroll {
+    container-type: inline-size;
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
+    scroll-snap-type: x mandatory;
     touch-action: pan-y;
   }
 
@@ -2825,8 +2827,12 @@ textarea {
 
   .video-group.drama .video-set .video-card,
   .video-group.tv-show .video-set .video-card {
-    flex-basis: min(74vw, 270px);
+    flex-basis: min(88vw, calc(100vw - 60px));
+    flex-basis: calc(100cqw - 24px);
     transform: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    scroll-margin-left: 12px;
   }
 
   .video-group.drama .video-set .video-card:nth-child(n),
