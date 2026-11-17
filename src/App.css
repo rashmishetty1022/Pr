@@ -2835,6 +2835,7 @@ textarea {
   }
 
   .video-marquee-button {
+    display: none;
     z-index: 3;
     width: 36px;
     height: 36px;

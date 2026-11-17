@@ -447,7 +447,7 @@ function App() {
           <span className="brand-mark">PSK</span>
           <div>
             <strong>Pradeep Shetty Kukkuje</strong>
-            <small>Actor • MC • Voice Artist</small>
+            <small>Actor • MC • Voice Artist • Business Man</small>
           </div>
         </div>
 
@@ -513,7 +513,7 @@ function App() {
           </video>
           <div className="hero-copy">
             <p className="eyebrow">Event Host <span aria-hidden="true">•</span> Master of Ceremonies</p>
-            <h1>Make your occasion memorable.</h1>
+            <h1>Make your occasion memorable</h1>
             <p className="lead">
               Make your wedding, celebration, or cultural program memorable with engaging
               hosting in Tulu and Kannada. I’m Pradeep Shetty Kukkuje, a Master of Ceremonies
@@ -602,7 +602,7 @@ function App() {
         <section className="info-section business-section" id="business">
           <div className="section-heading business-section-heading">
             <p className="eyebrow">Business</p>
-            <h2>Community-driven presence beyond the stage.</h2>
+            <h2>Community-driven presence beyond the stage</h2>
           </div>
           <div className="business-visual">
             <div className="business-photo">
@@ -676,7 +676,7 @@ function App() {
         <section className="info-section" id="videos">
           <div className="section-heading">
             <p className="eyebrow">Watch my work</p>
-            <h2>Drama and short films</h2>
+            <h2>Drama, short films And Namma Telipale shows</h2>
           </div>
 
           <div className="video-collections">
@@ -689,7 +689,7 @@ function App() {
         <section className="info-section" id="gallery">
           <div className="section-heading">
             <p className="eyebrow">Gallery</p>
-            <h2>Moments of performance, celebration, and presence.</h2>
+            <h2>Moments of performance, celebration, and presence</h2>
           </div>
 
           <div className="gallery-panels">
@@ -700,7 +700,7 @@ function App() {
               {galleryItems.length > 0 ? (
                 <ImageGallery images={galleryItems} />
               ) : (
-                <p className="gallery-empty">Photos coming soon.</p>
+                <p className="gallery-empty">Photos coming soon...</p>
               )}
             </section>
 
@@ -717,7 +717,7 @@ function App() {
               ) : (
                 <div className="testimonial-empty" role="status">
                   <span className="testimonial-quote" aria-hidden="true">“</span>
-                  <p>Feedback and review videos coming soon.</p>
+                  <p>Feedback and review videos coming soon....</p>
                 </div>
               )}
             </section>
@@ -739,7 +739,7 @@ function App() {
                 </span>
                 <div>
                   <h3>Booking details</h3>
-                  <p>To make bookings or discuss event requirements, reach out directly with your preferred date and event type.</p>
+                  <p>To make bookings or discuss event requirements, reach out directly with your preferred date and event type</p>
                 </div>
               </div>
               <ul className="contact-details-list">
