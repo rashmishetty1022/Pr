@@ -2768,6 +2768,55 @@ textarea {
     font-size: clamp(1.7rem, 8vw, 2.25rem);
   }
 
+  .video-group {
+    padding: 14px 0;
+  }
+
+  .video-marquee {
+    overflow-x: auto;
+    overflow-y: hidden;
+    perspective: none;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+
+  .video-marquee::-webkit-scrollbar {
+    display: none;
+  }
+
+  .video-track {
+    width: max-content;
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .video-set + .video-set {
+    display: none;
+  }
+
+  .video-set {
+    gap: 12px;
+    padding: 8px 12px 16px;
+    transform-style: flat;
+  }
+
+  .video-group.drama .video-set .video-card,
+  .video-group.tv-show .video-set .video-card {
+    flex-basis: min(74vw, 270px);
+    transform: none;
+  }
+
+  .video-group.drama .video-preview,
+  .video-group.tv-show .video-preview {
+    transform: none;
+  }
+
+  .video-marquee-button {
+    width: 36px;
+    height: 36px;
+  }
+
   .contact-intro {
     font-size: 0.9rem;
   }
