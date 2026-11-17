@@ -81,7 +81,6 @@ const videoCollections = [
     kind: 'tv-show',
     videos: [
       { title: 'Dosti Masti', url: 'https://youtu.be/l9Juf9caVFg' },
-      { title: 'Kudi Maathu', url: 'https://youtu.be/jIYoNu4mqRQ' },
       {
         title: 'Bale Telipale appearance 1',
         url: 'https://youtu.be/vHI48aPUZxM',
@@ -100,6 +99,7 @@ const videoCollections = [
         thumbnail: 'https://img.youtube.com/vi/mX9yVgVgxcM/hqdefault.jpg',
         featured: true,
       },
+      { title: 'Kudi Maathu', url: 'https://youtu.be/jIYoNu4mqRQ' },
     ],
   },
 ]
@@ -190,20 +190,24 @@ function PortfolioVideo({ video }) {
 function VideoCollection({ collection }) {
   const marqueeRef = useRef(null)
   const trackRef = useRef(null)
+  const touchStartXRef = useRef(null)
+  const ignoreClickUntilRef = useRef(0)
 
   function moveVideos(direction) {
     const marquee = marqueeRef.current
     const track = trackRef.current
     const firstSet = track?.querySelector('.video-set')
     const firstCard = firstSet?.querySelector('.video-card')
+    const step = firstSet && firstCard
+      ? (Number.parseFloat(window.getComputedStyle(firstCard).width) || firstCard.offsetWidth) +
+        (Number.parseFloat(window.getComputedStyle(firstSet).gap) || 0)
+      : 0
 
     if (
       window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
       window.matchMedia('(max-width: 560px)').matches
     ) {
       if (marquee && firstSet && firstCard) {
-        const gap = Number.parseFloat(window.getComputedStyle(firstSet).gap) || 0
-        const step = firstCard.offsetWidth + gap
         marquee.scrollBy({ left: direction === 'next' ? step : -step, behavior: 'auto' })
       }
       return
@@ -214,17 +218,37 @@ function VideoCollection({ collection }) {
     const setWidth = firstSet?.getBoundingClientRect().width
 
     if (animation && Number.isFinite(duration) && setWidth && firstCard) {
-      const gap = Number.parseFloat(window.getComputedStyle(firstSet).gap) || 0
-      const step = firstCard.offsetWidth + gap
       const reverse = window.getComputedStyle(track).animationDirection === 'reverse'
       const timeDirection = (direction === 'next' ? 1 : -1) * (reverse ? -1 : 1)
       animation.currentTime = Number(animation.currentTime ?? 0) +
         timeDirection * duration * step / setWidth
     } else if (marquee && firstSet && firstCard) {
-      const gap = Number.parseFloat(window.getComputedStyle(firstSet).gap) || 0
-      const step = firstCard.offsetWidth + gap
       marquee.scrollBy({ left: direction === 'next' ? step : -step, behavior: 'smooth' })
     }
+  }
+
+  function handleTouchStart(event) {
+    touchStartXRef.current = event.touches[0]?.clientX ?? null
+  }
+
+  function handleTouchEnd(event) {
+    const startX = touchStartXRef.current
+    const endX = event.changedTouches[0]?.clientX
+    touchStartXRef.current = null
+
+    if (startX === null || endX === undefined) return
+
+    const distance = startX - endX
+    if (Math.abs(distance) < 40) return
+    ignoreClickUntilRef.current = Date.now() + 400
+    moveVideos(distance > 0 ? 'next' : 'previous')
+  }
+
+  function handleClickCapture(event) {
+    if (Date.now() >= ignoreClickUntilRef.current) return
+    ignoreClickUntilRef.current = 0
+    event.preventDefault()
+    event.stopPropagation()
   }
 
   return (
@@ -238,7 +262,14 @@ function VideoCollection({ collection }) {
         >
           ‹
         </button>
-        <div className="video-scroll" ref={marqueeRef}>
+        <div
+          className="video-scroll"
+          ref={marqueeRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onClickCapture={handleClickCapture}
+          onTouchCancel={() => { touchStartXRef.current = null }}
+        >
           <div className="video-track" ref={trackRef}>
             {[0, 1].map((copy) => (
               <div
@@ -676,7 +707,7 @@ function App() {
         <section className="info-section" id="videos">
           <div className="section-heading">
             <p className="eyebrow">Watch my work</p>
-            <h2>Drama, short films And Namma Telipale shows</h2>
+            <h2>Drama, Short films And Bale Telipale shows</h2>
           </div>
 
           <div className="video-collections">

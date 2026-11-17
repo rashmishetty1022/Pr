@@ -2799,7 +2799,7 @@ textarea {
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
-    touch-action: pan-x;
+    touch-action: pan-y;
   }
 
   .video-scroll::-webkit-scrollbar {
@@ -2829,13 +2829,18 @@ textarea {
     transform: none;
   }
 
+  .video-group.drama .video-set .video-card:nth-child(n),
+  .video-group.tv-show .video-set .video-card:nth-child(n) {
+    transform: none;
+  }
+
   .video-group.drama .video-preview,
   .video-group.tv-show .video-preview {
     transform: none;
   }
 
   .video-marquee-button {
-    display: none;
+    display: grid;
     z-index: 3;
     width: 36px;
     height: 36px;
